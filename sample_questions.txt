@@ -1,0 +1,12 @@
+1. What is the name of the director / manager
+2. How many staff are there in the company?
+3. What is the name of the company?
+4. The company's account information ( account name, bank, number) etc
+5. How old is the company
+6. Staff salary scale (how much, according to various grade levels, do each staff receive)
+7. Company product(s) (what the company produce)
+8. The company's management staff. (senior staff)
+9. Goal, aim and objective(s) of the company.
+10. Junior staff of the company
+11. Company's contact address (phone, address, etc)
+12. Staff information (name, address, phone number, date of birth, marital status, gender, academic qualification etc)
