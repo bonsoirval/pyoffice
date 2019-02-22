@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'crispy_forms',
     'qa',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -133,3 +134,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = 'index'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'

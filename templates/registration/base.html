@@ -3,7 +3,19 @@
 <head>
   <meta charset="utf-8">
   <title>{% block title %}Django Auth Tutorial{% endblock %}</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+
+
 </head>
+<style>
+  main{
+    position:absolute;
+    left:15%;
+    top:15%;
+    width:70%;
+  }
+</style>
 <body>
   <main>
     {% block content %}

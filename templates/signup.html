@@ -1,0 +1,9 @@
+{% extends 'registration/base.html' %}
+
+{% block title %}Register | {{ block.super }}{% endblock %}
+
+{% block headline %}<h1>Register for the PyCon Survival Guide</h1>{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+    {% crispy form %}
+{% endblock %}
