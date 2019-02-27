@@ -7,6 +7,8 @@ import unicodedata #to convert unicode to string
 
 def ask_question(request):
     qa_form = question_form()
+    question = request.POST.get('question')
+    print("Question is : {0}".format(question))
 
     if request.method == 'POST':
         qa_form = question_form(request.POST)
