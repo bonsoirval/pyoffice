@@ -1,3 +1,22 @@
+from django import forms
+from .models import Product
+
+class question_form(forms.Form):
+    question = forms.CharField()
+    answer = forms.CharField()
+
+
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = [
+            'title',
+            'description',
+            'price'
+        ]
+
+
 from crispy_forms.layout import Layout, ButtonHolder, Submit, Field
 from crispy_forms.helper import FormHelper
 from django.contrib.auth.views import LoginView
@@ -9,33 +28,24 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
 from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions
 
-
-
-class UserLogin(LoginView):
-    def __init__(self, *args, **kwargs):
-        super(LoginView, self).__init__(*args, **kwargs)
-
-        self.helper = FormHelper()
-        self.helper.layout = Layout(
-            'username',
-            'password',
-            ButtonHolder(
-                Submit('login', 'Login', css_class="form-control")
-            )
-        )
-
-class Question():
-    def __init__ (self, *args, **kwargs):
-        self.helper = FormHelper()
-        self.helper.layout = Layout(
-
-        )
-
-
 class MessageForm(forms.Form):
     text_input = forms.CharField()
 
-    textarea = forms.CharField(
+    like_website = forms.TypedChoiceField(
+        label = "Do you like this website?",
+        choices = ((1, "Yes"), (0, "No")),
+        coerce = lambda x: bool(int(x)),
+        widget = forms.RadioSelect,
+        initial = '1',
+        required = True,
+    )
+
+    answer = forms.CharField(
+        widget = forms.Textarea(),
+
+    )
+
+    question = forms.CharField(
         widget = forms.Textarea(),
 
     )
@@ -70,16 +80,23 @@ class MessageForm(forms.Form):
     prepended_text_two = forms.CharField()
 
     multicolon_select = forms.MultipleChoiceField(
-        choices = (('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')),
+        choices = (('1', 'Purchasing Department'), ('2', 'Marketing Department'), ('3', 'Administrative Department'), ('4', '4'), ('5', '5')),
     )
 
     # Uni-form
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
+    helper.form_action = 'ask_question'
     helper.layout = Layout(
-        Field('text_input', css_class='input-xlarge'),
-        Field('textarea', rows="3", css_class='input-xlarge'),
-        Field('textarea', rows="10", readonly = 'yes', css_class='input-xlarge'),
+
+    Div(
+        #Div(Field('text_input',label="", placeholder="Type in your question"), css_class='span3'),
+        Div(Field('question', label="", placeholder="Type in your question"), css_class='span3'),
+        Div(Field('answer', label="", placeholder="Your answer shows here", readonly = 'yes',), css_class='span3', readonly='yes'),
+    ),
+        #Field('text_input', css_class='input-xlarge'),
+        #Field('textarea', rows="3", css_class='input-xlarge'),
+        #Field('textarea', rows="10", readonly = 'yes', css_class='input-xlarge'),
         #'radio_buttons',
         #Field('checkboxes', style="background: #FAFAFA; padding: 10px;"),
         #AppendedText('appended_text', '.00'),
@@ -88,7 +105,9 @@ class MessageForm(forms.Form):
         #'multicolon_select',
 
         FormActions(
-            Submit('save_changes', 'Save changes', css_class="btn-primary"),
-            Submit('cancel', 'Cancel'),
+            Submit('save_changes', 'Ask Question', css_class="btn-primary"),
+            Submit('cancel', 'Reset'),
         )
     )
+    helper.form_show_labels = False
+    #helper.field['text_input'].label = False

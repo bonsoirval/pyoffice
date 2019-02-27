@@ -2,56 +2,90 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from crispy_forms.helper import FormHelper
-from django import forms
+#from crispy_forms.helper import FormHelper
+#from django import forms
 
 
 # Create your models here.
-class ExampleForm(forms.Form):
-    like_website = forms.TypedChoiceField(
-        label = "Do you like this website?",
-        choices = ((1, "Yes"), (0, "No")),
-        coerce = lambda x: bool(int(x)),
-        widget = forms.RadioSelect,
-        initial = '1',
-        required = True,
-    )
+class Product(models.Model):
+    title = models.CharField(max_length = 120)
+    description = models.TextField(blank=True, null=True)
+    price = models.DecimalField(decimal_places = 2,max_digits = 10000)
+    summary = models.TextField(blank=False, null=False)
+    featured = models.BooleanField(default=True)
 
-    favorite_food = forms.CharField(
-        label = "What is your favorite food?",
-        max_length = 80,
-        required = True,
-    )
+    def __str__(self):
+        return self.title
 
-    favorite_color = forms.CharField(
-        label = "What is your favorite color?",
-        max_length = 80,
-        required = True,
-    )
+class Manager_question(models.Model):
+    manager_question = models.CharField(max_length = 120)
 
-    favorite_number = forms.IntegerField(
-        label = "Favorite number",
-        required = False,
-    )
+    def __str__(self):
+        return self.manager_question
 
-    notes = forms.CharField(
-        label = "Additional notes or feedback",
-        required = False,
-    )
-    def __init__(self, *args, **kwargs):
-        super(ExampleForm, self).__init__(*args, **kwargs)
-        self.helper  = FormHelper()
-        self.helper.form_id = 'id-exampleForm'
-        self.helper.form_class = 'blueForms'
-        self.helper.form_method = 'post'
-        self.helper.form_action = 'submit_survey'
 
-        self.helper.add_input(Submit('submit', 'Submit'))
+class Manager(models.Model):
+    name = models.CharField(max_length = 30)
+    phone = models.CharField(max_length = 13)
+    email = models.EmailField(max_length=70,blank=True, null= True, unique= True)
+
+
+    def __str__(self):
+        return self.name
+
+class Director_question(models.Model):
+    director_question = models.CharField(max_length = 120)
+
+    def __str__(self):
+        return self.director_question
+
+class Director(models.Model):
+    name = models.CharField(max_length = 30)
+    phone = models.CharField(max_length = 13)
+    email = models.EmailField(max_length=70,blank=True, null= True, unique= True)
+
+    def __str__(self):
+        return self.name
+
+
+class Number_of_staff(models.Model):
+    name = models.CharField(max_length = 30)
+    phone = models.CharField(max_length = 13)
+    email = models.EmailField(max_length=70,blank=True, null= True, unique= True)
+
+    def __str__(self):
+        return self.director_question
+
+
+class Staff(models.Model):
+    name = models.CharField(max_length = 30)
+    phone = models.CharField(max_length = 13)
+    email = models.EmailField(max_length=70,blank=True, null= True, unique= True)
+
+
+    def __str__(self):
+        return self.name
+
+class Products_question(models.Model):
+    product_question = models.CharField(max_length = 120)
+
+    def __str__(self):
+        return self.product_question
+
+class Product_questions(models.Model):
+    title = models.CharField(max_length = 120)
+    description = models.TextField(blank=True, null=True)
+    price = models.DecimalField(decimal_places = 2,max_digits = 10000)
+    summary = models.TextField(blank=False, null=False)
+    featured = models.BooleanField(default=True)
 
 class Qa(models.Model):
     qa_question = models.CharField(max_length=100)
     qa_answer_sql = models.TextField()
     qa_created_at = models.DateField()
+
+    def __str__(self):
+        return self.qa_question
 
 class Question(models.Model):
     qa_question = models.CharField(max_length=100)

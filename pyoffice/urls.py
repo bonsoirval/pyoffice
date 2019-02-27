@@ -25,6 +25,7 @@ urlpatterns = [
     #url(r'^logout/$', auth_views.logout, name = 'logout'),
     url(r'^admin/', admin.site.urls),
     url('lab', include('lab.urls')),
-    url('qa', include('qa.urls')),
+    url('qa/', include('qa.urls')),
     url(r'^$', TemplateView.as_view(template_name='site_page/index.html'),name='home'),
+    #url('qa/create/$', TemplateView.as_view(template_name='product/product_create.html'),name='product'),
 ]
