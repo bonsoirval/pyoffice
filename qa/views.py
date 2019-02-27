@@ -6,12 +6,10 @@ from django.db import connection #to enable django db connection to database
 import unicodedata #to convert unicode to string
 
 def ask_question(request):
-    qa_form = question_form()
-    question = request.POST.get('question')
-    print("Question is : {0}".format(question))
+    qa_form = question_form(request.GET or None)
 
-    if request.method == 'POST':
-        qa_form = question_form(request.POST)
+    if request.method == 'GET':
+        qa_form = question_form(request.GET)
         context = {
             'form' : qa_form
         }
@@ -23,24 +21,32 @@ def ask_question(request):
             #return row
             #print(qa_form.cleaned_data)
             #pass data to the form
-            question = request.POST.get('question')
+            question = request.GET.get('question')
             str_question = unicodedata.normalize('NFKD', question).encode('ascii','ignore')
             #print("The question is : {0}".format(str_question))
             #str_question = unicodedata.normalize('NFKD', question).encode('ascii','ignore')
-            print(type(str_question))
-            #print ("The type is {0}: ".format(type(str_question)))
+            #print(type(str_question))
+            print ("The type is {0}: ".format(type(str_question)))
             result = decision(str_question)
             context = {
                 'title' : 'Intelligent Database Interface',
+                'question':question,
                 'answer':result #question #result
             }
         else:
+            print("form submission not valid")
             print(qa_form.errors)
+            context = {
+                'title' : 'Intelligent Database Interface',
+                'question':question,
+                'answer':'nothing',
+            }
 
-    #request not post, but get
+    #request not GET, but get
     else:
         context = {
             'title' : 'Intelligent Database Interface',
+            'question':question,
             'answer':'nothing',
         }
     return render(request, 'qa/index.html', context)
@@ -74,38 +80,47 @@ def decision(asked_question):
     #print ("question type {0} ".format(type(asked_question)))
     #if asked_question.lower in [for question.lower() in manager_question]:
     if asked_question.lower() in [x.lower() for x in manager_question]:
-        manager_question()
-        print "director"
-    elif asked_question.lower() in [x.lower() for x in director_question]:
-        print 'manager'
-    elif asked_question.lower() in [x.lower() for x in number_of_staff]:
-        print 'number of staff'
-    elif asked_question.lower() in [x.lower() for x in products_count]:
-        product_question()
-        print 'product count'
+        manager_answer = manager_question_function()
+        return manager_answer
 
-def manager_question():
+    elif asked_question.lower() in [x.lower() for x in director_question]:
+        director_answer = director_question_function()
+        print("director function ")
+        return director_answer
+
+    elif asked_question.lower() in [x.lower() for x in number_of_staff]:
+        number_of_staff_answer = number_of_staff_function()
+        return number_of_staff_answer
+
+    elif asked_question.lower() in [x.lower() for x in products_count]:
+        products_question_answer = products_question_function()
+        return products_question_function
+
+def manager_question_function():
     result = 'you are looking for manager'
     return result
 
-def director_question():
-    result = 'director question'
+def director_question_function():
+    result = 'you are looking for director'
+    return result
 
-def number_of_staff():
-    result = 'number_of_staff'
+def number_of_staff_function():
+    result = 'you are looking for the number of staff'
+    return result
 
-def products_question():
-    result = 'products_count'
+def products_question_function():
+    result = 'you are looking for our products'
+    return result
 
 def product_create_view(request):
     context = {}
     return render(request, 'qa/product_create.html', context)
 
 """def product_create_view(request):
-    #print(request.POST)
     #print(request.GET)
-    if request.method == "POST":
-        my_new_title = request.POST.get('title')
+    #print(request.GET)
+    if request.method == "GET":
+        my_new_title = request.GET.get('title')
         print(my_new_title)
         #Product.objects.create(title = my_new_title)
     context = {}
@@ -113,7 +128,7 @@ def product_create_view(request):
 
 """
 """def product_create_view(request):
-    form = ProductForm(request.POST or None)
+    form = ProductForm(request.GET or None)
     if form.is_valid():
         form.save()
         form = ProductForm()
@@ -127,8 +142,8 @@ def index(request):
     return render(request, 'qa/index.html', {'form': MessageForm(), 'title':"Intelligent Database Interface"})
 
 """def ask_question(request):
-    if request.method == 'POST':
-        message_form = MessageForm(request.POST)
+    if request.method == 'GET':
+        message_form = MessageForm(request.GET)
         if message_form.is_valid():
             sub_form.save()
     else:

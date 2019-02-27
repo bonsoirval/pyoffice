@@ -80,8 +80,15 @@ class Product_questions(models.Model):
     featured = models.BooleanField(default=True)
 
 class Qa(models.Model):
+    STUDENT_TYPE_CHOICES = (
+        ('0', 'freshman'),
+        ('1', 'sophomore'),
+        ('2', 'junior'),
+        ('3', 'senior'),
+    )
     qa_question = models.CharField(max_length=100)
     qa_answer_sql = models.TextField()
+    qa_answer_fucntion = models.CharField(max_length = 1, choices=STUDENT_TYPE_CHOICES, default = 'freshman')
     qa_created_at = models.DateField()
 
     def __str__(self):
