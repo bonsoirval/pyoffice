@@ -25,7 +25,14 @@ class Manager_question(models.Model):
 
 
 class Manager(models.Model):
+    TITLE_CHOICES = (
+        ('Mr', 'Mr'),
+        ('Sir', 'Sir'),
+        ('Mrs', 'Mrs'),
+        ('Lady', 'Lady'),
+    )
     name = models.CharField(max_length = 30)
+    title = models.CharField(max_length = 5, choices=TITLE_CHOICES, default = 'Mr')
     phone = models.CharField(max_length = 13)
     email = models.EmailField(max_length=70,blank=True, null= True, unique= True)
 
@@ -40,9 +47,17 @@ class Director_question(models.Model):
         return self.director_question
 
 class Director(models.Model):
+    TITLE_CHOICES = (
+        ('Mr', 'Mr'),
+        ('Sir', 'Sir'),
+        ('Mrs', 'Mrs'),
+        ('Lady', 'Lady'),
+    )
     name = models.CharField(max_length = 30)
+    title = models.CharField(max_length = 5, choices=TITLE_CHOICES, default = 'Mr')
     phone = models.CharField(max_length = 13)
     email = models.EmailField(max_length=70,blank=True, null= True, unique= True)
+
 
     def __str__(self):
         return self.name
