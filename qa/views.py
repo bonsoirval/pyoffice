@@ -58,12 +58,14 @@ def decision(asked_question):
     director_question = Director_question.objects.values_list('director_question', flat=True)
     manager_question = Manager_question.objects.values_list('manager_question', flat=True)#get(id=1)
     products_count = Product_count_question.objects.values_list('product_count_question', flat=True)
-
+    product_list = Product_list_question.objects.all()
+    '''
     products_list = [
             'Company product(s)?',
             'what the company produce?',
             'list company products'
     ]
+    '''
 
     number_of_staff = [
             'How many staff are there in the company?',
@@ -88,6 +90,12 @@ def decision(asked_question):
     elif asked_question.lower() in [x.lower() for x in products_count]:
         products_question_answer = products_count_function(asked_question.lower())
         return products_question_answer
+    elif asked_question.lower() in [x for x in product_list]:
+        products_list_question_answer = products_list_function (asked_question)
+        return products_list_question_answer
+    else:
+        error_message = 'We so sorry, you asked an unknown question. Please check back later and contact admin'
+        return error_message
 
 def manager_question_function(asked_question):
     manager_title = Manager.objects.values_list('title', flat=True)#get(id=1)
@@ -110,6 +118,14 @@ def products_count_function(asked_question):
     product_count = Product.objects.all().count()
     product_count_statement = "The firm has {0} products in total".format(product_count)
     return product_count_statement
+
+def products_list_function(asked_question):
+    print("Asked question is {0} in products_list_function".format(asked_question))
+    product_list = Product.objects.all()
+    product_list_statement = "The following are \
+                            the products the company produces: \
+                            {0} ".format(product_list)
+    return product_list_statement
 
 def product_create_view(request):
     context = {}
