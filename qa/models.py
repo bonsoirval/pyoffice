@@ -7,7 +7,7 @@ from django.db import models
 
 
 # Create your models here.
-class Product(models.Model):
+class Product_count(models.Model):
     title = models.CharField(max_length = 120)
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(decimal_places = 2,max_digits = 10000)
@@ -16,6 +16,36 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+'''
+class Product_count_question(models.Model):
+    product_question = models.CharField(max_length = 120)
+
+    def __str__(self):
+        return self.product_question
+'''
+class Product_count_question(models.Model):
+    product_count_question = models.CharField(max_length = 120)
+
+    def __str__(self):
+        return self.product_count_question
+
+class Product_list_question(models.Model):
+    product_list_question = models.CharField(max_length = 120)
+
+    def __str__(self):
+        return self.product_list_question
+
+class Product(models.Model):
+    name = models.CharField(max_length = 120)
+    description = models.TextField(blank=True, null=True)
+    price = models.DecimalField(decimal_places = 2,max_digits = 10000)
+    summary = models.TextField(blank=False, null=False)
+    featured = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+
 
 class Manager_question(models.Model):
     manager_question = models.CharField(max_length = 120)
@@ -25,17 +55,9 @@ class Manager_question(models.Model):
 
 
 class Manager(models.Model):
-    TITLE_CHOICES = (
-        ('Mr', 'Mr'),
-        ('Sir', 'Sir'),
-        ('Mrs', 'Mrs'),
-        ('Lady', 'Lady'),
-    )
     name = models.CharField(max_length = 30)
-    title = models.CharField(max_length = 5, choices=TITLE_CHOICES, default = 'Mr')
     phone = models.CharField(max_length = 13)
     email = models.EmailField(max_length=70,blank=True, null= True, unique= True)
-
 
     def __str__(self):
         return self.name
@@ -47,17 +69,9 @@ class Director_question(models.Model):
         return self.director_question
 
 class Director(models.Model):
-    TITLE_CHOICES = (
-        ('Mr', 'Mr'),
-        ('Sir', 'Sir'),
-        ('Mrs', 'Mrs'),
-        ('Lady', 'Lady'),
-    )
     name = models.CharField(max_length = 30)
-    title = models.CharField(max_length = 5, choices=TITLE_CHOICES, default = 'Mr')
     phone = models.CharField(max_length = 13)
     email = models.EmailField(max_length=70,blank=True, null= True, unique= True)
-
 
     def __str__(self):
         return self.name
@@ -71,28 +85,13 @@ class Number_of_staff(models.Model):
     def __str__(self):
         return self.director_question
 
-
 class Staff(models.Model):
     name = models.CharField(max_length = 30)
     phone = models.CharField(max_length = 13)
     email = models.EmailField(max_length=70,blank=True, null= True, unique= True)
 
-
     def __str__(self):
         return self.name
-
-class Products_question(models.Model):
-    product_question = models.CharField(max_length = 120)
-
-    def __str__(self):
-        return self.product_question
-
-class Product_questions(models.Model):
-    title = models.CharField(max_length = 120)
-    description = models.TextField(blank=True, null=True)
-    price = models.DecimalField(decimal_places = 2,max_digits = 10000)
-    summary = models.TextField(blank=False, null=False)
-    featured = models.BooleanField(default=True)
 
 class Qa(models.Model):
     STUDENT_TYPE_CHOICES = (

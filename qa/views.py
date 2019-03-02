@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from forms import MessageForm
 from .forms import ProductForm, question_form
-from qa.models import Question, Manager_question, Manager, Director, Director_question
+from qa.models import Question, Manager_question, Manager, Director,\
+Director_question, Product_list_question, Product_count_question, Product
 from django.db import connection #to enable django db connection to database
+from django.db.models import Count
 import unicodedata #to convert unicode to string
 
 def ask_question(request):
@@ -52,14 +54,16 @@ def ask_question(request):
     return render(request, 'qa/index.html', context)
 
 def decision(asked_question):
-    director_question = [
-            'What is the name of the director',
-            'What is the name of the director?',
-            'who is your director',
-            'who is your director?'
-        ]
-
+    print("Asked question one is : {0}".format(asked_question))
+    director_question = Director_question.objects.values_list('director_question', flat=True)
     manager_question = Manager_question.objects.values_list('manager_question', flat=True)#get(id=1)
+    products_count = Product_count_question.objects.values_list('product_count_question', flat=True)
+
+    products_list = [
+            'Company product(s)?',
+            'what the company produce?',
+            'list company products'
+    ]
 
     number_of_staff = [
             'How many staff are there in the company?',
@@ -67,11 +71,6 @@ def decision(asked_question):
             'how many people work here?'
             'what number of people work in this firm?'
         ]
-    products_count = [
-            'Company product(s)?',
-            'what the company produce?',
-            'list company products'
-    ]
 
     #if asked_question.lower in [for question.lower() in manager_question]:
     if asked_question.lower() in [x.lower() for x in manager_question]:
@@ -87,8 +86,8 @@ def decision(asked_question):
         return number_of_staff_answer
 
     elif asked_question.lower() in [x.lower() for x in products_count]:
-        products_question_answer = products_question_function()
-        return products_question_function
+        products_question_answer = products_count_function(asked_question.lower())
+        return products_question_answer
 
 def manager_question_function(asked_question):
     manager_title = Manager.objects.values_list('title', flat=True)#get(id=1)
@@ -96,7 +95,7 @@ def manager_question_function(asked_question):
     result = "The company's manager is " + manager_title[0] + " " + manager_name[0]
     return result
 
-def director_question_function():
+def director_question_function(asked_question):
     director_title = Manager.objects.values_list('title', flat=True)#get(id=1)
     director_name = Manager.objects.values_list('name', flat=True)
     result = "The company's director is " + director_title[0] + " " + director_name[0]
@@ -106,9 +105,11 @@ def number_of_staff_function():
     result = 'you are looking for the number of staff'
     return result
 
-def products_question_function():
-    result = 'you are looking for our products'
-    return result
+def products_count_function(asked_question):
+    print("Asked question is {0}".format(asked_question))
+    product_count = Product.objects.all().count()
+    product_count_statement = "The firm has {0} products in total".format(product_count)
+    return product_count_statement
 
 def product_create_view(request):
     context = {}
