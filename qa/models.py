@@ -16,13 +16,7 @@ class Product_count(models.Model):
 
     def __str__(self):
         return self.title
-'''
-class Product_count_question(models.Model):
-    product_question = models.CharField(max_length = 120)
 
-    def __str__(self):
-        return self.product_question
-'''
 class Product_count_question(models.Model):
     product_count_question = models.CharField(max_length = 120)
 
@@ -55,6 +49,13 @@ class Manager_question(models.Model):
 
 
 class Manager(models.Model):
+    TITLE_CHOICES = (
+        ('Mr', 'Mr'),
+        ('Mrs', 'Mrs'),
+        ('Lady', 'Lady'),
+        ('Sir', 'Sir'),
+    )
+    title = models.CharField(max_length = 5, choices=TITLE_CHOICES, default = 'Mr')
     name = models.CharField(max_length = 30)
     phone = models.CharField(max_length = 13)
     email = models.EmailField(max_length=70,blank=True, null= True, unique= True)
@@ -69,6 +70,13 @@ class Director_question(models.Model):
         return self.director_question
 
 class Director(models.Model):
+    TITLE_CHOICES = (
+        ('Mr', 'Mr'),
+        ('Mrs', 'Mrs'),
+        ('Lady', 'Lady'),
+        ('Sir', 'Sir'),
+    )
+    title = models.CharField(max_length = 5, choices=TITLE_CHOICES, default = 'Mr')
     name = models.CharField(max_length = 30)
     phone = models.CharField(max_length = 13)
     email = models.EmailField(max_length=70,blank=True, null= True, unique= True)
@@ -109,8 +117,15 @@ class Qa(models.Model):
         return self.qa_question
 
 class Question(models.Model):
+    QUESTION_FUNCTION_CHOICES = (
+        ('0', 'director_question()'),
+        ('1', 'manager_question()'),
+        ('2', 'number_of_staff'),
+        ('3', 'products_count'),
+    )
     qa_question = models.CharField(max_length=100)
     qa_answer_sql = models.TextField()
+    qa_function = models.CharField(max_length = 1, choices = QUESTION_FUNCTION_CHOICES, default = "Select Question Function")
     qa_created_at = models.DateField()
 
     def __str__(self):
