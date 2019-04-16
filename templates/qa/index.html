@@ -6,19 +6,19 @@
     <form  action="/qa/ask_question/" class="form-horizontal" method="POST" >
        {% csrf_token %}
       <div>
-        <div class="span3" >
-          <div id="div_id_question" class="form-group">
-            <div class="controls ">
-              <label for="answer"> Your Question</label>
-              <textarea placeholder="Type in your question here" name="question" rows="10" cols="40" id="id_question" required placeholder="Type in your question" class="textarea form-control" label="">{{ question }}</textarea>
-            </div>
-          </div>
-        </div>
     <div class="span3"  readonly="yes">
       <div id="div_id_answer" class="form-group">
         <div class="controls ">
           <label for="answer"> Your Result</label>
           <textarea name="answer" required = 'no' readonly="yes" rows="10" id="id_answer" class="textarea form-control" placeholder="Your answer shows here" cols="40" >{{ answer }}</textarea>
+        </div>
+      </div>
+    </div>
+    <div class="span3" >
+      <div id="div_id_question" class="form-group">
+        <div class="controls ">
+          <label for="answer"> Your Question</label>
+          <textarea placeholder="Type in your question here" name="question" rows="10" cols="40" id="id_question" required placeholder="Type in your question" class="textarea form-control" label="">{{ question }}</textarea>
         </div>
       </div>
     </div>

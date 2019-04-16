@@ -30,7 +30,7 @@ def ask_question(request):
             #str_question = unicodedata.normalize('NFKD', question).encode('ascii','ignore')
             #print(type(str_question))
             #print ("The type is {0}: ".format(type(str_question)))
-            result = decision(str_question)
+            result = decision(str_question, request)
             context = {
                 'title' : 'Intelligent Database Interface',
                 'question':question,
@@ -53,12 +53,14 @@ def ask_question(request):
         }
     return render(request, 'qa/index.html', context)
 
-def decision(asked_question):
-    print("Asked question one is : {0}".format(asked_question))
-    director_question = Director_question.objects.values_list('director_question', flat=True)
-    manager_question = Manager_question.objects.values_list('manager_question', flat=True)#get(id=1)
-    products_count = Product_count_question.objects.values_list('product_count_question', flat=True)
-    product_list = Product_list_question.objects.all()
+def decision(asked_question, request):
+
+    #getting questions from database
+    director_question   = Director_question.objects.values_list('director_question', flat=True)
+    manager_question    = Manager_question.objects.values_list('manager_question', flat=True)#get(id=1)
+    products_count      = Product_count_question.objects.values_list('product_count_question', flat=True)
+    product_list        = Product_list_question.objects.values_list('product_list_question',flat=True) #all()
+    print("Products list of available products : {0}".format(product_list))
     '''
     products_list = [
             'Company product(s)?',
@@ -90,12 +92,14 @@ def decision(asked_question):
     elif asked_question.lower() in [x.lower() for x in products_count]:
         products_question_answer = products_count_function(asked_question.lower())
         return products_question_answer
-    elif asked_question.lower() in [x for x in product_list]:
-        products_list_question_answer = products_list_function (asked_question)
+    elif asked_question.lower() in [x.lower() for x in product_list]:
+        products_list_question_answer = products_list_function (asked_question.lower(), request)
         return products_list_question_answer
     else:
-        error_message = 'We so sorry, you asked an unknown question. Please check back later and contact admin'
+        error_message = 'I am not sure what you are looking for, so I made the '\
+        'following suggestions for you: \n 1.{0} \n 2.{1} \n 3.{2} \n 4.{3} \n 5.{4}\n'.format(manager_question[0],director_question[0], number_of_staff[0], products_count[0], product_list[0])
         return error_message
+
 
 def manager_question_function(asked_question):
     manager_title = Manager.objects.values_list('title', flat=True)#get(id=1)
@@ -104,8 +108,8 @@ def manager_question_function(asked_question):
     return result
 
 def director_question_function(asked_question):
-    director_title = Manager.objects.values_list('title', flat=True)#get(id=1)
-    director_name = Manager.objects.values_list('name', flat=True)
+    director_title = Director.objects.values_list('title', flat=True)#get(id=1)
+    director_name = Director.objects.values_list('name', flat=True)
     result = "The company's director is " + director_title[0] + " " + director_name[0]
     return result
 
@@ -119,12 +123,13 @@ def products_count_function(asked_question):
     product_count_statement = "The firm has {0} products in total".format(product_count)
     return product_count_statement
 
-def products_list_function(asked_question):
+def products_list_function(asked_question, request):
     print("Asked question is {0} in products_list_function".format(asked_question))
-    product_list = Product.objects.all()
-    product_list_statement = "The following are \
-                            the products the company produces: \
-                            {0} ".format(product_list)
+    #product_list = request.POST.get('question')
+    product_list = Product.objects.values_list('name', flat=True)
+    #product_list = unicodedata.normalize('NFKD', unicode(product_list)).encode('ascii','ignore')
+    product_list_statement = "The following are the products the company produces: {0} \
+    ".format(str([str(product) for product in product_list]))
     return product_list_statement
 
 def product_create_view(request):
